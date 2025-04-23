@@ -10,6 +10,7 @@
     "symfony/http-kernel": "^6.4",
     "symfony/event-dispatcher": "^6.4",
     "symfony/framework-bundle": "^6.4",
+    "symfony/yaml": "^6.4 || ^7.1",
     "psr/log": "^3|^2|^1",
     "ionepub/idcard": "^1.1",
     "tourze/gb-t-2261": "0.0.*"
