@@ -38,6 +38,8 @@ class IdcardServiceImpl implements IdcardService
         return match ($val) {
             '男', 'male' => Gender::MAN,
             '女', 'female' => Gender::WOMAN,
+            false, null, '' => Gender::UNKNOWN, // 处理无效身份证返回 false 的情况
+            default => Gender::UNKNOWN,
         };
     }
 
