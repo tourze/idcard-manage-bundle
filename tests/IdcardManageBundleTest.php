@@ -15,4 +15,4 @@ class IdcardManageBundleTest extends TestCase
         $bundle = new IdcardManageBundle();
         $this->assertInstanceOf(IdcardManageBundle::class, $bundle);
     }
-} 
+}
