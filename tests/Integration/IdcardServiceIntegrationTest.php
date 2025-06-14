@@ -4,13 +4,25 @@ namespace Tourze\IdcardManageBundle\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tourze\GBT2261\Gender;
+use Tourze\IdcardManageBundle\IdcardManageBundle;
 use Tourze\IdcardManageBundle\Service\IdcardService;
+use Tourze\IntegrationTestKernel\IntegrationTestKernel;
 
 class IdcardServiceIntegrationTest extends KernelTestCase
 {
     protected static function getKernelClass(): string
     {
         return IntegrationTestKernel::class;
+    }
+
+    protected static function createKernel(array $options = []): IntegrationTestKernel
+    {
+        return new IntegrationTestKernel(
+            $options['environment'] ?? 'test',
+            $options['debug'] ?? true,
+            [IdcardManageBundle::class => ['all' => true]],
+            []
+        );
     }
 
     /**
