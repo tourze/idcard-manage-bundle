@@ -63,6 +63,9 @@ class IdcardServiceIntegrationTest extends KernelTestCase
         // 测试有效身份证，但我们只测试方法调用成功
         $validIdcard = $this->getValidTestIdcard();
         $result = $idcardService->isValid($validIdcard);
+        
+        // 断言返回的是布尔值
+        $this->assertIsBool($result);
     }
 
     /**
@@ -78,6 +81,7 @@ class IdcardServiceIntegrationTest extends KernelTestCase
 
         // 只检查返回类型
         if ($result !== false) {
+            $this->assertIsString($result);
         } else {
             $this->assertFalse($result);
         }

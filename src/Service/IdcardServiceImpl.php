@@ -6,7 +6,7 @@ use Ionepub\Idcard;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Tourze\GBT2261\Gender;
 
-#[AsAlias(IdcardService::class)]
+#[AsAlias(id: IdcardService::class)]
 class IdcardServiceImpl implements IdcardService
 {
     public function isValid(string $number): bool
