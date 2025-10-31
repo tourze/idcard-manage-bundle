@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\IdcardManageBundle\Tests;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tourze\IdcardManageBundle\IdcardManageBundle;
+use Tourze\PHPUnitSymfonyKernelTest\AbstractBundleTestCase;
 
-class IdcardManageBundleTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(IdcardManageBundle::class)]
+#[RunTestsInSeparateProcesses]
+final class IdcardManageBundleTest extends AbstractBundleTestCase
 {
-    /**
-     * 测试 Bundle 类实例化
-     */
-    public function testBundleInitialization(): void
-    {
-        $bundle = new IdcardManageBundle();
-        $this->assertInstanceOf(IdcardManageBundle::class, $bundle);
-    }
 }

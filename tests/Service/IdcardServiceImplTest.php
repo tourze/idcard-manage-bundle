@@ -1,15 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\IdcardManageBundle\Tests\Service;
 
-use Ionepub\Idcard;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tourze\GBT2261\Gender;
+use Tourze\IdcardManageBundle\Service\IdcardService;
 use Tourze\IdcardManageBundle\Service\IdcardServiceImpl;
+use Tourze\PHPUnitSymfonyKernelTest\AbstractIntegrationTestCase;
 
-class IdcardServiceImplTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(IdcardServiceImpl::class)]
+#[RunTestsInSeparateProcesses]
+final class IdcardServiceImplTest extends AbstractIntegrationTestCase
 {
-    private IdcardServiceImpl $idcardService;
+    private IdcardService $idcardService;
+
+    protected function onSetUp(): void
+    {
+        /** @var IdcardService $service */
+        $service = self::getContainer()->get(IdcardService::class);
+        $this->idcardService = $service;
+    }
 
     /**
      * 获取有效的测试身份证号码
@@ -17,83 +33,59 @@ class IdcardServiceImplTest extends TestCase
     private function getValidTestIdcard(): string
     {
         // 使用固定的有效测试身份证号
-        return '110101199003077896';
-    }
-
-    protected function setUp(): void
-    {
-        $this->idcardService = new IdcardServiceImpl();
-
-        // 模拟 Idcard 类的行为，以确保测试可以通过
-        $this->mockIdcardForTesting();
-    }
-
-    /**
-     * 模拟 Idcard 类以便测试
-     */
-    private function mockIdcardForTesting(): void
-    {
-        // 跳过实际测试，仅使用 PHPUnit 断言来测试行为
-        if (!class_exists(Idcard::class)) {
-            $this->markTestSkipped('身份证验证库不可用');
-        }
+        return '110101199003070003';
     }
 
     /**
      * 测试有效身份证号码验证
      */
-    public function testIsValid_withValidIdcard(): void
+    public function testIsValidWithValidIdcard(): void
     {
         $validIdcard = $this->getValidTestIdcard();
-
-        // 我们只测试方法被调用，不测试实际结果
-        // 因为实际结果依赖于第三方库
         $result = $this->idcardService->isValid($validIdcard);
-        
-        // 验证方法执行成功
-        $this->assertNotNull($result);
+
+        // 验证有效身份证返回 true
+        $this->assertTrue($result);
     }
 
     /**
      * 测试无效身份证号码验证
      */
-    public function testIsValid_withInvalidIdcard(): void
+    public function testIsValidWithInvalidIdcard(): void
     {
         // 无效身份证号码
-        $invalidIdcard = '';
+        $invalidIdcard = '123456';
         $result = $this->idcardService->isValid($invalidIdcard);
-        
-        // 验证方法执行成功
-        $this->assertNotNull($result);
+
+        // 验证无效身份证返回 false
+        $this->assertFalse($result);
     }
 
     /**
      * 测试获取有效身份证的生日
      */
-    public function testGetBirthday_withValidIdcard(): void
+    public function testGetBirthdayWithValidIdcard(): void
     {
         $validIdcard = $this->getValidTestIdcard();
         $result = $this->idcardService->getBirthday($validIdcard);
 
-        // 我们只测试返回类型，不测试具体内容
-        if ($result !== false) {
-            $this->assertNotEmpty($result);
-        } else {
-            $this->assertFalse($result);
-        }
+        // 验证返回值是字符串且格式正确
+        $this->assertIsString($result);
+        $this->assertEquals('1990-03-07', $result);
+        $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}$/', $result);
     }
 
     /**
      * 测试获取无效身份证的生日
      */
-    public function testGetBirthday_withInvalidIdcard(): void
+    public function testGetBirthdayWithInvalidIdcard(): void
     {
         // 无效身份证号码
-        $invalidIdcard = '';
+        $invalidIdcard = '123456';
         $result = $this->idcardService->getBirthday($invalidIdcard);
-        
-        // 断言返回值是字符串或false
-        $this->assertTrue($result === false || $result !== '');
+
+        // 验证返回值是 false
+        $this->assertFalse($result);
     }
 
     /**
@@ -106,6 +98,8 @@ class IdcardServiceImplTest extends TestCase
 
         // 验证返回了有效的性别枚举值
         $this->assertInstanceOf(Gender::class, $result);
+        // 根据身份证倒数第二位 0（偶数）应该是女性
+        $this->assertEquals(Gender::WOMAN, $result);
     }
 
     /**
@@ -116,5 +110,14 @@ class IdcardServiceImplTest extends TestCase
         // 根据实现，此方法总是返回 false
         $this->assertFalse($this->idcardService->twoElementVerify('张三', $this->getValidTestIdcard()));
         $this->assertFalse($this->idcardService->twoElementVerify('', ''));
+    }
+
+    /**
+     * 测试服务依赖注入
+     */
+    public function testServiceCanBeInjected(): void
+    {
+        $this->assertInstanceOf(IdcardServiceImpl::class, $this->idcardService);
+        $this->assertInstanceOf(IdcardService::class, $this->idcardService);
     }
 }

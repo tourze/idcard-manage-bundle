@@ -1,10 +1,29 @@
 services:
-  # default configuration for services in *this* file
   _defaults:
-    autowire: true      # Automatically injects dependencies in your services.
-    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-    public: false       # Allows optimizing the container by removing unused services
+    autowire: true
+    autoconfigure: true
 
-  Tourze\IdcardManageBundle\Service\:
-    resource: '../../Service/'
-    public: true        # 使服务在测试中可访问
+  # 明确注册服务以确保在测试环境中正确工作
+  Tourze\IdcardManageBundle\Service\IdcardServiceImpl:
+    public: true
+    tags: ['tourze.idcard_service']
+
+  # 接口别名，指向实现类
+  Tourze\IdcardManageBundle\Service\IdcardService:
+    alias: Tourze\IdcardManageBundle\Service\IdcardServiceImpl
+    public: true
+
+  # CRUD控制器
+  Tourze\IdcardManageBundle\Controller\Admin\IdcardValidationLogCrudController:
+    public: true
+    tags: ['controller.service_arguments']
+
+  # AdminMenu服务
+  Tourze\IdcardManageBundle\Service\AdminMenu:
+    public: true
+    tags: ['tourze.admin_menu_provider']
+
+  # Repository
+  Tourze\IdcardManageBundle\Repository\IdcardValidationLogRepository:
+    public: true
+    tags: ['doctrine.repository_service']

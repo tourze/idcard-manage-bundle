@@ -1,17 +1,16 @@
 <?php
 
-namespace Tourze\IdcardManageBundle\Tests\Integration\Service;
+namespace Tourze\IdcardManageBundle\Tests\Service;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Tourze\IdcardManageBundle\Service\IdcardService;
 
 /**
- * IdcardService 接口的测试类
- * 
- * 此测试类仅用于满足 PHPStan 规则要求
- * 实际的功能测试在 IdcardServiceImplTest 和 IdcardServiceIntegrationTest 中进行
+ * @internal
  */
-class IdcardServiceTest extends TestCase
+#[CoversClass(IdcardService::class)]
+final class IdcardServiceTest extends TestCase
 {
     public function testInterfaceExists(): void
     {
@@ -21,7 +20,7 @@ class IdcardServiceTest extends TestCase
     public function testInterfaceHasRequiredMethods(): void
     {
         $reflection = new \ReflectionClass(IdcardService::class);
-        
+
         $this->assertTrue($reflection->hasMethod('isValid'));
         $this->assertTrue($reflection->hasMethod('getBirthday'));
         $this->assertTrue($reflection->hasMethod('getGender'));
