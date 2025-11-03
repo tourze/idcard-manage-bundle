@@ -5,6 +5,7 @@ namespace Tourze\IdcardManageBundle;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Tourze\BundleDependency\BundleDependencyInterface;
+use Tourze\EasyAdminMenuBundle\EasyAdminMenuBundle;
 
 class IdcardManageBundle extends Bundle implements BundleDependencyInterface
 {
@@ -15,6 +16,7 @@ class IdcardManageBundle extends Bundle implements BundleDependencyInterface
     {
         return [
             DoctrineBundle::class => ['all' => true],
+            EasyAdminMenuBundle::class => ['all' => true],
         ];
     }
 }
