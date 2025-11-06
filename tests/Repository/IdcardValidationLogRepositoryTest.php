@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tourze\IdcardManageBundle\Tests\Repository;
 
-use BizUserBundle\Entity\BizUser;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Tourze\GBT2261\Gender;
 use Tourze\IdcardManageBundle\Entity\IdcardValidationLog;
 use Tourze\IdcardManageBundle\Repository\IdcardValidationLogRepository;
@@ -44,6 +44,7 @@ final class IdcardValidationLogRepositoryTest extends AbstractRepositoryTestCase
         return $this->repository;
     }
 
+    
     public function testCanSaveAndRetrieveIdcardValidationLog(): void
     {
         $log = new IdcardValidationLog();
@@ -177,18 +178,9 @@ final class IdcardValidationLogRepositoryTest extends AbstractRepositoryTestCase
 
     public function testFindByUser(): void
     {
-        // 创建真实的用户实体
-        $user = new BizUser();
-        $user->setUsername('testuser1');
-        $user->setPasswordHash('$2y$10$test.hash.value');
-        self::getEntityManager()->persist($user);
-
-        $otherUser = new BizUser();
-        $otherUser->setUsername('testuser2');
-        $otherUser->setPasswordHash('$2y$10$test.hash.value2');
-        self::getEntityManager()->persist($otherUser);
-
-        self::getEntityManager()->flush();
+        // 使用测试基类的方法创建正确的用户实体
+        $user = $this->createUser('testuser1', 'password1', ['ROLE_USER']);
+        $otherUser = $this->createUser('testuser2', 'password2', ['ROLE_USER']);
 
         // 创建两条记录属于同一用户
         $log1 = new IdcardValidationLog();
