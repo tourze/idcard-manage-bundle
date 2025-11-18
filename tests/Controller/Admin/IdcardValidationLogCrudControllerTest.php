@@ -36,14 +36,6 @@ final class IdcardValidationLogCrudControllerTest extends AbstractEasyAdminContr
         return IdcardValidationLog::class;
     }
 
-    public function testGetEntityFqcn(): void
-    {
-        $this->assertSame(
-            IdcardValidationLog::class,
-            IdcardValidationLogCrudController::getEntityFqcn()
-        );
-    }
-
     public function testControllerCanBeInstantiated(): void
     {
         $controller = new IdcardValidationLogCrudController();
